@@ -4,7 +4,15 @@ class ApplicationController < ActionController::Base
   before_action :find_user
 
   def render_404
-    return render :file => "#{Rails.root}/public/404.html", :status => 404, :layout => false
+    # DPR: this will actually render a 404 page in production
+    raise ActionController::RoutingError.new("Not Found")
+  end
+
+  def require_login
+    unless @login_user
+      flash[:error] = "You must be logged in to do that"
+      redirect_to root_path
+    end
   end
 
   private
