@@ -2,6 +2,7 @@ class WorksController < ApplicationController
   # We should always be able to tell what category
   # of work we're dealing with
   before_action :category_from_work, except: [:root, :index, :new, :create]
+  before_action :require_login, only: [:index, :show]
 
   def root
     @albums = Work.best_albums
@@ -38,6 +39,9 @@ class WorksController < ApplicationController
   end
 
   def edit
+    if @work.nil?
+      render :edit, status: :not_found
+    end
   end
 
   def update
